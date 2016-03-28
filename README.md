@@ -131,7 +131,7 @@ Meanwhile back at ~~the ranch~~ `localhost:8089`...
 ![Locust Intro Screen](https://www.dropbox.com/s/f4vrfpimt9c0rdd/Screenshot%202016-03-25%2009.40.45.png?dl=1) 
 
 Once you specify a swarm size and hatch rate per second, you can watch the swarm go in real time, and then download results and logs direcly from the web UI:
-![Locust Results Screen](https://www.dropbox.com/s/fckfw4oi8cwtjmk/Screenshot%202016-03-25%2010.37.05.png?dl=1)
+![Locust Results Screen](https://www.dropbox.com/s/je3h7e47wrth3sw/Screenshot%202016-03-28%2012.15.16.png?dl=1)
 
 ### Challenges
 * Getting traffic distribution correct - especially if your app is going to be exposed to real world users, it's hard to know what a realistic usage pattern for your application will look like.
