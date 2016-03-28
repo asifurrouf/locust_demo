@@ -1,5 +1,10 @@
-## I am Lost Testing and You Can Too!
-##### A gentle introduction to Locust
+## I am Load Testing and You Can Too!
+###### A gentle introduction to Locust
+
+### What is Locust?
+
+From [locust.io](http://locust.io):
+> Locust is an easy-to-use, distributed, user load testing tool. Intended for load testing web sites (or other systems) and figuring out how many concurrent users a system can handle.
 
 ### Why Locust?
 * Load testing is hard to do on small projects - Locust makes it way easier, and it's written for Python 2.7, which you already have on your machine (you don't have to mess around with the JDK). *Not currently python 3 compatible* (:snake: :three: :-1:)
