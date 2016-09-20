@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Locust-demo by bmd</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/bmd/locust-demo">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Locust-demo</h1>
+            <h2>A demo showing how to use the Locust load testing tool</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/bmd/locust-demo/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/bmd/locust-demo/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h2>
+<a id="i-am-load-testing-and-you-can-too" class="anchor" href="#i-am-load-testing-and-you-can-too" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>I am Load Testing and You Can Too!</h2>
+
+<h6>
+<a id="a-gentle-introduction-to-locust" class="anchor" href="#a-gentle-introduction-to-locust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A gentle introduction to Locust</h6>
+
+<h3>
+<a id="what-is-locust" class="anchor" href="#what-is-locust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is Locust?</h3>
+
+<p>From <a href="http://locust.io">locust.io</a>:</p>
+
+<blockquote>
+<p>Locust is an easy-to-use, distributed, user load testing tool. Intended for load testing web sites (or other systems) and figuring out how many concurrent users a system can handle.</p>
+</blockquote>
+
+<h3>
+<a id="why-locust" class="anchor" href="#why-locust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why Locust?</h3>
+
+<ul>
+<li>Load testing is hard to do on small projects - Locust makes it way easier, and it's written for Python 2.7, which you already have on your machine (you don't have to mess around with the JDK). <em>Not currently python 3 compatible</em> (<g-emoji alias="snake" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f40d.png">🐍</g-emoji> <g-emoji alias="three" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/0033-20e3.png">3️⃣</g-emoji> <g-emoji alias="-1" fallback-src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44e.png">👎</g-emoji>)</li>
+<li>Loose coupling of testing infrastructure with codebases (one set of tests can be used against multiple web services)</li>
+<li>Equally good for testing HTTP and systems based on other protocols (<a href="http://docs.locust.io/en/latest/testing-other-systems.html">example</a>), although Locust gives you more code for HTTP out of the box, but its measurement protocol is generic. All you have to do is implement the <code>Locust</code> interface, and you can use it to measure anything. That's pretty cool.</li>
+<li>POPO Philosophy. Very little procedural code, and minimal boilerplate. Everything is a Python class or Dict.</li>
+<li>Very scaleable - can run in a local mode on your machine or distributed mode with an arbitrary number of master and slave servers.</li>
+<li>Efficient CLI or pretty Web UI for interpreting results. Take your pick.</li>
+</ul>
+
+<h3>
+<a id="why-not-locust" class="anchor" href="#why-not-locust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why NOT Locust?</h3>
+
+<ul>
+<li>Locust is not a replacement for unit and integration testing. It doesn't do much to help you trace errors beyond logging the HTTP response statuses and any messages in the body. It's a specialist tool.</li>
+<li>Can be frustrating to implement complex API scenarios because there's little abstraction over the HTTP calls themselves in Locust's native interface.</li>
+<li>Much better at testing RESTful than stateful APIs (you're not writing stateful APIs, right? It's 2016.).</li>
+</ul>
+
+<h3>
+<a id="lets-get-set-up" class="anchor" href="#lets-get-set-up" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Let's get set up</h3>
+
+<p>Locust will interact with your existing application purely over http - which means it works equally well with any language. I've used locust primarily for testing PHP applications, but pick your poison.</p>
+
+<div class="highlight highlight-source-shell"><pre>         <span class="pl-k">~</span>/git         $ mkdir locust <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">cd</span> locust
+         <span class="pl-k">~</span>/git/locust  $ git init
+         <span class="pl-k">~</span>/git/locust  $ mkvirtualenv locust          <span class="pl-c"># set up your venv</span>
+(locust) <span class="pl-k">~</span>/git/locust  $ pip install locustio
+(locust) <span class="pl-k">~</span>/git/locust  $ pip install zmq              <span class="pl-c"># Keep Locust from throwing warnings if it can't use pyZmq</span>
+(locust) <span class="pl-k">~</span>/git/locust  $ touch locustfile.py          <span class="pl-c"># locust looks for this file to contain your test runner</span></pre></div>
+
+<h3>
+<a id="making-a-locustfilepy" class="anchor" href="#making-a-locustfilepy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Making a locustfile.py</h3>
+
+<p>A locustfile must minimally define two objects. A client class (HttpLocust), that manages interactions with the API and a TaskSet class that defines the types of behaviors to test against the API.</p>
+
+<p><em>Note: You can use any file as the source of the locust behavior with the -f flag: <code>locust -f /tests/load_tests.py</code></em></p>
+
+<p>Here's an extremely simple example:</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> locust <span class="pl-k">import</span> TaskSet, task, HttpLocust
+
+<span class="pl-k">class</span> <span class="pl-en">ApiClientBehavior</span>(<span class="pl-e">TaskSet</span>):
+    <span class="pl-s"><span class="pl-pds">"""</span></span>
+<span class="pl-s">    The @task decorator declares a locust task.</span>
+<span class="pl-s">    The argument passed the task decorator determines</span>
+<span class="pl-s">    the relative frequency with which the task</span>
+<span class="pl-s">    will be spawned within a swarm. For example</span>
+<span class="pl-s">    a task with a relative frequency of 1 will be</span>
+<span class="pl-s">    spawned half as often as a task with a </span>
+<span class="pl-s">    relative frequency of 2.</span>
+<span class="pl-s">    <span class="pl-pds">"""</span></span>
+    <span class="pl-en">@task</span>(<span class="pl-c1">1</span>)
+    <span class="pl-k">def</span> <span class="pl-en">get_a_random_response</span>(<span class="pl-smi"><span class="pl-smi">self</span></span>):
+        <span class="pl-c"># any call to locustio.TaskSet.get creates a </span>
+        <span class="pl-c"># response that will be logged in the load</span>
+        <span class="pl-c"># testing report</span>
+        <span class="pl-v">self</span>.client.get(<span class="pl-s"><span class="pl-pds">"</span>/random<span class="pl-pds">"</span></span>,
+
+        <span class="pl-c"># name will give you a name that groups</span>
+        <span class="pl-c"># all calls from this method in the same</span>
+        <span class="pl-c"># report row, even if the URI is being</span>
+        <span class="pl-c"># randomly or procedurally generated</span>
+        <span class="pl-v">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>A Random HTTP Status<span class="pl-pds">'</span></span>,
+
+        <span class="pl-c"># Headers is just a Dict(). Everything</span>
+        <span class="pl-c"># in locust is a POPO.</span>
+        <span class="pl-v">headers</span><span class="pl-k">=</span>{
+            <span class="pl-s"><span class="pl-pds">"</span>Accept<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>application/json<span class="pl-pds">"</span></span>
+        })
+
+    <span class="pl-en">@task</span>(<span class="pl-c1">2</span>)
+    <span class="pl-k">def</span> <span class="pl-en">get_a_success_response</span>(<span class="pl-smi"><span class="pl-smi">self</span></span>):
+        <span class="pl-v">self</span>.client.get(<span class="pl-s"><span class="pl-pds">"</span>/success<span class="pl-pds">"</span></span>,
+        <span class="pl-v">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>A 200 Status<span class="pl-pds">'</span></span>,
+        <span class="pl-v">headers</span><span class="pl-k">=</span>{
+            <span class="pl-s"><span class="pl-pds">"</span>Accept<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>application/json<span class="pl-pds">"</span></span>
+        })
+
+<span class="pl-k">class</span> <span class="pl-en">ApiClient</span>(<span class="pl-e">HttpLocust</span>):
+    <span class="pl-c"># taskset is just a POPO</span>
+    task_set <span class="pl-k">=</span> ApiClientBehavior
+
+    <span class="pl-c"># How long should a task wait after the batch</span>
+    <span class="pl-c"># member is spawned before executing. This creates</span>
+    <span class="pl-c"># randomness in the traffic patterns rather than</span>
+    <span class="pl-c"># having every member of the batch try to execute </span>
+    <span class="pl-c"># at once.</span>
+    min_wait <span class="pl-k">=</span> <span class="pl-c1">1000</span>
+    max_wait <span class="pl-k">=</span> <span class="pl-c1">5000</span></pre></div>
+
+<h3>
+<a id="running-your-tests" class="anchor" href="#running-your-tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running your tests</h3>
+
+<h4>
+<a id="on-the-command-line" class="anchor" href="#on-the-command-line" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>On the command line</h4>
+
+<div class="highlight highlight-source-shell"><pre>(locust) <span class="pl-k">~</span>/git/locust  $ locust --no-web \
+  --host=prism.wpd.bsd.net \
+  --clients=5 \
+  --hatch-rate=100 \
+  --num-requests=1000
+
+[2016-03-25 09:29:45,892] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.main: Starting Locust 0.7.3
+[2016-03-25 09:29:45,892] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.runners: Hatching and swarming 5 clients at the rate 100 clients/s...
+...later...
+[2016-03-25 09:29:48,949] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.runners: All locusts hatched: ApiClient: 5
+[2016-03-25 09:29:48,950] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.runners: Resetting stats
+[2016-03-25 09:29:48,950] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.runners: All locusts dead
+[2016-03-25 09:29:48,950] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.main: Shutting down (<span class="pl-c1">exit</span> code 0), bye.</pre></div>
+
+<p><strong>Explanation:</strong></p>
+
+<p><code>--host</code> - the domain to receive the locust traffic. You can also define this directly in your <code>HttpLocust</code> class, although this flag will still override it.</p>
+
+<p><code>--clients</code> - the number of concurrent clients to use (one of the knobs you can use to control the volume of traffic in your test) - this setting is more important in distributed tests than local tests, and will affect the peak attack rate of the swarm.</p>
+
+<p><code>--hatch-rate=</code> - the number of Locusts to hatch per second (remember that a locust isn't necessarily executed when it hatches immediately - the <code>min_wait</code> and <code>max_wait</code> parameters control how long it will wait to execute its request.</p>
+
+<p><code>--num-requests=</code> - the total number of requests to execute. An estimate for the duration of the attack can be derived as <code>(hatch-rate / num-requests) + max_wait</code> seconds.</p>
+
+<h4>
+<a id="using-the-web-ui" class="anchor" href="#using-the-web-ui" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using the web UI</h4>
+
+<div class="highlight highlight-source-shell"><pre>(locust) <span class="pl-k">~</span>/git/locust  $ locust
+[2016-03-25 10:18:42,742] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.main: Starting web monitor at <span class="pl-k">*</span>:8089
+[2016-03-25 10:18:42,743] bmd-mbp.<span class="pl-k">local</span>/INFO/locust.main: Starting Locust 0.7.3</pre></div>
+
+<p>Meanwhile back at <del>the ranch</del> <code>localhost:8089</code>...
+<img src="https://www.dropbox.com/s/f4vrfpimt9c0rdd/Screenshot%202016-03-25%2009.40.45.png?dl=1" alt="Locust Intro Screen"> </p>
+
+<p>Once you specify a swarm size and hatch rate per second, you can watch the swarm go in real time, and then download results and logs direcly from the web UI:
+<img src="https://www.dropbox.com/s/je3h7e47wrth3sw/Screenshot%202016-03-28%2012.15.16.png?dl=1" alt="Locust Results Screen"></p>
+
+<h3>
+<a id="challenges" class="anchor" href="#challenges" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Challenges</h3>
+
+<ul>
+<li>Getting traffic distribution correct - especially if your app is going to be exposed to real world users, it's hard to know what a realistic usage pattern for your application will look like.</li>
+<li>Ensuring sufficient coverage (Locust doesn't give you any kind of coverage reports, since it doesn't know the application) can be difficult for complex APIs</li>
+</ul>
+
+<h3>
+<a id="useful-locust-tricks" class="anchor" href="#useful-locust-tricks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Useful Locust Tricks</h3>
+
+<h5>
+<a id="check-the-overall-distribution-of-tasks-within-your-swarms" class="anchor" href="#check-the-overall-distribution-of-tasks-within-your-swarms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Check the overall distribution of tasks within your swarms</h5>
+
+<div class="highlight highlight-source-shell"><pre>(locust) <span class="pl-k">~</span>/git/locust $ locust --show-task-ratio-json <span class="pl-k">2&gt;&amp;1</span> <span class="pl-k">|</span> jq <span class="pl-c1">.</span>
+{
+  <span class="pl-s"><span class="pl-pds">"</span>per_class<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>ApiClient<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>tasks<span class="pl-pds">"</span></span>: {
+        <span class="pl-s"><span class="pl-pds">"</span>get_a_random_response<span class="pl-pds">"</span></span>: {
+          <span class="pl-s"><span class="pl-pds">"</span>ratio<span class="pl-pds">"</span></span>: 0.3333333333333333
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>get_a_success_response<span class="pl-pds">"</span></span>: {
+          <span class="pl-s"><span class="pl-pds">"</span>ratio<span class="pl-pds">"</span></span>: 0.6666666666666666
+        }
+      },
+      <span class="pl-s"><span class="pl-pds">"</span>ratio<span class="pl-pds">"</span></span>: 1
+    }
+  },
+  <span class="pl-s"><span class="pl-pds">"</span>total<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>ApiClient<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>tasks<span class="pl-pds">"</span></span>: {
+        <span class="pl-s"><span class="pl-pds">"</span>get_a_random_response<span class="pl-pds">"</span></span>: {
+          <span class="pl-s"><span class="pl-pds">"</span>ratio<span class="pl-pds">"</span></span>: 0.3333333333333333
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>get_a_success_response<span class="pl-pds">"</span></span>: {
+          <span class="pl-s"><span class="pl-pds">"</span>ratio<span class="pl-pds">"</span></span>: 0.6666666666666666
+        }
+      },
+      <span class="pl-s"><span class="pl-pds">"</span>ratio<span class="pl-pds">"</span></span>: 1
+    }
+  }
+}</pre></div>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/bmd">bmd</a> can be found on <a href="https://github.com/bmd/locust-demo">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
